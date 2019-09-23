@@ -3,7 +3,7 @@
  * Mongo-Hacker
  * MongoDB Shell Enhancements for Hackers
  *
- * Tyler J. Brock - 2013 - 2016
+ * Tyler J. Brock - 2013 - 2019
  *
  * http://tylerbrock.github.com/mongo-hacker
  *
@@ -17,10 +17,11 @@ mongo_hacker_config = {
   sort_keys:      false,            // sort the keys in documents when displayed
   uuid_type:      'default',        // 'java', 'c#', 'python' or 'default'
   banner_message: 'Mongo-Hacker ',  // banner message
-  version:        '0.0.14',         // current mongo-hacker version
+  version:        '0.1.0',          // current mongo-hacker version
   show_banner:     true,            // show mongo-hacker version banner on startup
-  windows_warning: true,            // show warning banner for windows
-  force_color:     false,           // force color highlighting for Windows users
+  use_color:       true,            // use color highlighting if possible
+  force_color:     false,           // force color even if Mongo Hacker thinks it won't work
+  windows_warning: true,            // show warning banner regarding color support for Windows
   count_deltas:    false,           // "count documents" shows deltas with previous counts
   column_separator:  '→',           // separator used when printing padded/aligned columns
   value_separator:   '/',           // separator used when merging padded/aligned values

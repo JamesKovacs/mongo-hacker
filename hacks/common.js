@@ -1,5 +1,15 @@
 __indent = Array(mongo_hacker_config.indent + 1).join(' ');
-__colorize = (_isWindows() && !mongo_hacker_config['force_color']) ? false : true;
+__colorize = mongo_hacker_config['use_color'];
+
+// Disable color for terminals that aren't likely to support ANSI color codes
+if (__colorize && !mongo_hacker_config['force_color']) {
+    if (_isWindows()) {
+        __colorize = false;
+    } else if (typeof(isInteractive) === typeof(Function)) {
+        // Requires MongoDB 4.2+ shell
+        __colorize = isInteractive();
+    }
+}
 
 ObjectId.prototype.toString = function() {
     return this.str;
@@ -104,7 +114,7 @@ DBQuery.prototype.shellPrint = function(){
         if (typeof _verboseShell !== 'undefined' && _verboseShell) {
             var time = new Date().getTime() - start;
             var slowms = getSlowms();
-            var fetched = "Fetched " + n + " record(s) in ";
+            var fetched = "Fetched " + n + " document" + (n === 1 ? "" : "s") + " in ";
             if (time > slowms) {
                 fetched += colorize(time + "ms", { color: "red", bright: true });
             } else {
@@ -255,6 +265,17 @@ tojsonObject = function( x, indent, nolint, nocolor, sort_keys ) {
 tojson = function( x, indent , nolint, nocolor, sort_keys ) {
 
     var sortKeys = (null == sort_keys) ? mongo_hacker_config.sort_keys : sort_keys;
+
+    try {
+        if (tojson.caller === null) {
+            // Unknown caller context, so assume this is from C++ code
+            nocolor = true;
+        }
+    }
+    catch (err) {
+        // Access to caller function can be disabled in strict mode
+        no_color = true;
+    }
 
     if ( x === null )
         return colorize("null", mongo_hacker_config.colors['null'], nocolor);

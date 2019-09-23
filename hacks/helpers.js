@@ -24,8 +24,15 @@ function isMongos() {
 };
 
 function getSlowms(){
-    if(!isMongos()){
-        return db.getProfilingStatus().slowms;
+    if (!isMongos()){
+        var current_version = parseFloat(db.serverBuildInfo().version).toFixed(2);
+        if (current_version >= 4.0) {
+            // The `profile` command can block with pending transactions in 4.0+ (#193)
+            return 100;
+        }
+
+        var res = db._dbCommand({profile: -1});
+        return (res.ok ? res.slowms : 100);
     } else {
         return 100;
     }
@@ -39,10 +46,10 @@ function maxLength(listOfNames) {
 
 function printPaddedColumns() {
     var columnWidths = Array.prototype.map.call(
-      arguments,
-      function(column) {
-        return maxLength(column);
-      }
+        arguments,
+        function(column) {
+            return maxLength(column);
+        }
     );
 
     for (i = 0; i < arguments[0].length; i++) {

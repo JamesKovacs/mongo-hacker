@@ -36,18 +36,16 @@ rm -rdf mongo-hacker/
 
 #### Basic UX
 
-  - Sort document keys by default
-  - Highlight querytime if verboseShell is enabled
-    - In **green** if querytime is at or below slowms
+  - Verbose shell is enabled by default (config: `verbose_shell`)
+    - To toggle temporarily run `setVerboseShell(false)`
+  - Highlight query time if verbose shell is enabled
+    - In **green** if query time is at or below slowms
     - In **red** if query time is above slowms
-  - Default indent is 2 spaces instead of tab
-    - Customizable by setting `indent` key of config
-  - Verbose shell is enabled by default -- to disable: `setVerboseShell(false)`
-  - Disable notfication of "Type 'it' for more"
+  - Default indent is 2 spaces instead of tab (config: `indent`)
+  - Disable notification of "Type 'it' for more"
+  - Option to sort document keys (config: `sort_keys`)
   - Custom prompt: `hostname(process-version)[rs_status:set_name] db>`
-  - Always pretty print. You can still use default format by appending `.ugly()` to the end of db statement.
-  - Show DBs has aligned columns, is sorted by database name and shows less significant digits (in master for Mongo 2.5/2.6)
-  - Nicer `sh.status()` output (remove lastmod, take up less space, colorize chunk's shard)
+  - Always pretty print. You can still use default format by appending `.ugly()` to the end of a statement.
   - Colorized query output for console/terminal windows supporting ANSI color codes.
     ![Colorized Output](http://tylerbrock.github.com/mongo-hacker/screenshots/colorized_shell.png)
 
@@ -57,24 +55,21 @@ The MongoDB shell offers various "shell commands" _(sometimes referred to as "sh
 
 To make interactive use of the MongoDB shell even more convenient, `mongo-hacker` adds the following shell commands:
 
-* `count collections`/`count tables`: count the number of collections in each of the mongo server's databases - by [@pvdb][pvdb]
-* `count documents`/`count docs`: count the number of documents in all _(non-`system`)_ collections in the database - by [@pvdb][pvdb]
-* `count indexes`: list all collections and display the size of all indexes - by [@cog-g][cog-g]
+* `count collections`/`count tables`: count the number of collections in each of the mongo server's databases
+* `count documents`/`count docs`: count the number of documents in all _(non-`system`)_ collections in the database
+* `count indexes`: list all collections and display the size of all indexes
 
 Some of these commands have hidden features that can be enabled in the `mongo-hacker` config, to make the command output even more useful:
 
-* by changing the `count_deltas` setting to `true` in `config.js`, the `count documents` command will also print out the change in the number of documents since the last count - by [@pvdb][pvdb]
+* by changing the `count_deltas` setting to `true` in `config.js`, the `count documents` command will also print out the change in the number of documents since the last count
 
 [interactive_versus_scripted]: http://docs.mongodb.org/manual/tutorial/write-scripts-for-the-mongo-shell/#differences-between-interactive-and-scripted-mongo
-
-[pvdb]: https://github.com/pvdb
-[cog-g]: https://github.com/Cog-g
 
 #### API Additions
 
 ##### Scripting
 
-Get a list of database names: _(by [@pvdb][pvdb])_
+Get a list of database names:
 
 ```js
 db.getMongo().getDatabaseNames()
@@ -83,12 +78,6 @@ db.getMongo().getDatabaseNames()
 _(note that this method is similar - functionality-wise and usage-wise - to the existing `db.getCollectionNames()` API method and allows for advanced, cross-database scripting in the MongoDB shell)_
 
 ##### General
-
-Filter for a collection of documents:
-
-```js
-db.collection.filter(<criteria>)
-```
 
 One for finding a single document:
 
@@ -250,3 +239,13 @@ runOnDbs(/db_names_regexp/, function(db) {
     // db is that selected database
 });
 ```
+
+## Recent Changes
+
+See [CHANGELOG.md](CHANGELOG.md) for a list of changes from previous versions of Mongo Hacker.
+
+A very special thanks to all of the [contributors to Mongo Hacker](https://github.com/TylerBrock/mongo-hacker/graphs/contributors).
+
+## Disclaimer
+
+This software is not supported by [MongoDB, Inc.](https://www.mongodb.com/) under any of their commercial support subscriptions or otherwise. Any usage of Mongo Hacker is at your own risk. Bug reports, feature requests, and questions can be posted in the [Issues section](https://github.com/TylerBrock/mongo-hacker/issues?q=is%3Aopen+is%3Aissue) on GitHub.
